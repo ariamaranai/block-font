@@ -8,7 +8,7 @@
     "condition": {
       "resourceTypes": ["font"],
       "requestMethods": ["get"],
-      "regexFilter": "^.{25}.+?(?:fa-|awes|mate|symb|ico|\\?kit|skin)",
+      "regexFilter": "^.{22}.+?(?:fa-|awes|mate|symb|ico|\\?kit|skin)",
       "isUrlFilterCaseSensitive": true
     }
   },
