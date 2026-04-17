@@ -3,7 +3,7 @@ chrome.action.onClicked.addListener(async () => {
   chrome.declarativeNetRequest.updateEnabledRulesets({
     [(await chrome.declarativeNetRequest.getEnabledRulesets()).length ? (path = "off.png", "disableRulesetIds") : "enableRulesetIds"]: ["0"]
   });
-  chrome.action.setIcon({ path });
+  return chrome.action.setIcon({ path });
 });
 chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(async info => {
   if (info.rule.ruleId > 1)
