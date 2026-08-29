@@ -1,31 +1,36 @@
-chrome.action.onClicked.addListener(async () => {
-  let path;
-  chrome.declarativeNetRequest.updateEnabledRulesets({
-    [(await chrome.declarativeNetRequest.getEnabledRulesets()).length ? (path = "off.png", "disableRulesetIds") : (path = "on.png", "enableRulesetIds")]: ["0"]
-  });
-  return chrome.action.setIcon({ path });
-});
-chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(async info => {
-  if (info.rule.ruleId > 1)
-    try {
-      return await chrome.declarativeNetRequest.setExtensionActionOptions({
-        displayActionCountAsBadgeText: !0,
-        tabUpdate: {
-          increment: 1,
-          tabId: info.request.tabId
-        }
-      });
-    } catch {}
-});
+onunhandledrejection = e => e.preventDefault();
+
 {
+  let { action, declarativeNetRequest, runtime } = chrome;
+  action.onClicked.addListener(() =>
+    declarativeNetRequest.getEnabledRulesets((rulesets, path) => (
+      declarativeNetRequest.updateEnabledRulesets({
+        [rulesets.length ? (path = "off.png", "disableRulesetIds") : (path = "on.png", "enableRulesetIds")]: ["0"]
+      }),
+      action.setIcon({ path })
+    ))
+  );
+  declarativeNetRequest.onRuleMatchedDebug.addListener(info =>
+    info.rule.ruleId > 1 &&
+    declarativeNetRequest.setExtensionActionOptions({
+      displayActionCountAsBadgeText: !0,
+      tabUpdate: {
+        increment: 1,
+        tabId: info.request.tabId
+      }
+    })
+  );
+
   let isCalled;
-  chrome.runtime.onStartup.addListener(async () =>
+  runtime.onStartup.addListener(() =>
     isCalled ??= (
-      chrome.action.setIcon({ path: (await chrome.declarativeNetRequest.getEnabledRulesets()).length ? "on.png" : "off.png" }),
-      chrome.action.setBadgeBackgroundColor({ color: "#500" }),
-      chrome.action.setBadgeTextColor({ color: "#fff" }),
+      declarativeNetRequest.getEnabledRulesets(rulesets => (
+        action.setIcon({ path: rulesets.length ? "on.png" : "off.png" }),
+        action.setBadgeBackgroundColor({ color: "#500" }),
+        action.setBadgeTextColor({ color: "#fff" })
+      )),
       0
     )
   );
+  runtime.onStartup.dispatch();
 }
-chrome.runtime.onStartup.dispatch();
