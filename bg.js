@@ -1,7 +1,7 @@
 onunhandledrejection = e => e.preventDefault();
-
 {
   let { action, declarativeNetRequest, runtime } = chrome;
+  let isCalled;
   action.onClicked.addListener(() =>
     declarativeNetRequest.getEnabledRulesets((rulesets, path) => (
       declarativeNetRequest.updateEnabledRulesets({
@@ -20,9 +20,7 @@ onunhandledrejection = e => e.preventDefault();
       }
     })
   );
-
-  let isCalled;
-  runtime.onStartup.addListener(() =>
+  (runtime = runtime.onStartup).addListener(() =>
     isCalled ??= (
       declarativeNetRequest.getEnabledRulesets(rulesets => (
         action.setIcon({ path: rulesets.length ? "on.png" : "off.png" }),
@@ -32,5 +30,5 @@ onunhandledrejection = e => e.preventDefault();
       0
     )
   );
-  runtime.onStartup.dispatch();
+  runtime.dispatch();
 }
