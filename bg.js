@@ -11,12 +11,12 @@ onunhandledrejection = e => e.preventDefault();
     ))
   );
   declarativeNetRequest.onRuleMatchedDebug.addListener(info =>
-    info.rule.ruleId > 1 &&
+    info.rule.ruleId === 1 ||
     declarativeNetRequest.setExtensionActionOptions({
       displayActionCountAsBadgeText: !0,
       tabUpdate: {
-        increment: 1,
-        tabId: info.request.tabId
+        tabId: info.request.tabId,
+        increment: 1
       }
     })
   );
